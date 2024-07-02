@@ -5,7 +5,7 @@ import { threadValidation } from "@/validations/thread"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-
+import { useOrganization } from "@clerk/nextjs"
 import { Button } from "@/components/ui/button"
 import {
     Form,
@@ -24,6 +24,7 @@ import { useToast } from "../ui/use-toast"
 
 export function PostThread({userid}:{userid:string}) {
 
+    const {organization} = useOrganization()
 
     const path=usePathname()
     const router=useRouter()
@@ -37,7 +38,7 @@ export function PostThread({userid}:{userid:string}) {
     })
 
     async function onSubmit(values: z.infer<typeof threadValidation>) {
-        await createThread({author:userid,text:values.thread,path:path,communityId:null})
+        await createThread({author:userid,text:values.thread,path:path,communityId:organization? organization.id : null})
 
         toast({
             description:"Thread Created"

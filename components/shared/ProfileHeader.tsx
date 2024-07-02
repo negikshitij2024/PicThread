@@ -1,10 +1,11 @@
 import Image from "next/image"
+import Link from "next/link"
 
 interface props{
-    accountId:string,authUserId:string,name:string,username:string,imgUrl:string,bio:string
+    accountId:string,authUserId:string,name:string,username:string,imgUrl:string,bio:string,type?:string
 }
 
-const ProfileHeader = ({accountId,authUserId,name,username,imgUrl,bio}:props) => {
+const ProfileHeader = ({accountId,authUserId,name,username,imgUrl,bio,type,}:props) => {
   return (
     <div className="flex w-full flex-col justify-start">
         <div className="flex items-center justify-between">
@@ -17,6 +18,14 @@ const ProfileHeader = ({accountId,authUserId,name,username,imgUrl,bio}:props) =>
                     <p className="text-base-medium text-gray-1">@{username}</p>
                 </div>
             </div>
+            {accountId===authUserId && type !== "Community" &&(
+                <Link href='profile/edit'>
+                    <div className="flex">
+                        <Image src='/assets/edit.svg' alt='logout' width={16} height={16}/>
+                        <p className='text-light-2 max-sm:hidden'>Edit</p>
+                    </div>
+                </Link>
+            )}
 
         </div>
 

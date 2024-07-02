@@ -10,9 +10,9 @@ const Page=async({params}:{params:{id:string}})=>{
     if(!user) return null
     const userinfo=await fetchuser(user?.id)
 
-    if(!userinfo) redirect('/onboarding')
+    if(!userinfo || !userinfo.onboarding) redirect('/onboarding')
         const post = await fetchThreadById(params.id)
-    const isComment=post.parentId?(true):(false)
+    const isComment=(!post.parentId)?(false):(true)
     
     console.log(`is Comment ${isComment}`)
 return(

@@ -5,6 +5,7 @@ import User from "../models/user.model"
 import { revalidatePath } from "next/cache";
 import Thread from "../models/thread.model";
 import { FilterQuery, SortOrder } from "mongoose";
+import Community from "../models/community.model";
 interface userprops{
     id:string,
     username:string,
@@ -57,15 +58,18 @@ export async function fetchUserPosts(userId:string){
         .populate({
             path:'threads',
             model:Thread,
-            populate:{
+            populate:[{
+                path:"community",
+                model:Community,
+                select:"name id image _id"
+            },{
                 path:"children",
                 model:Thread,
                 populate:{
                     path:"author",
                     model:User,
                     select:'name image id'
-                }
-            }
+                }}]
         })
 
         return userPosts

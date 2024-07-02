@@ -4,6 +4,7 @@ import Thread from "../models/thread.model"
 import User from "../models/user.model"
 import { connecttoDb } from "../mongoose"
 import mongoose from "mongoose"
+import Community from "../models/community.model"
 
 interface threadProps {
     author: string,
@@ -14,16 +15,28 @@ interface threadProps {
 export async function createThread({ text, author, communityId, path }: threadProps) {
     try {
         connecttoDb()
-
+        const communityIdObject=await Community.findOne({id:communityId},{
+            _id:1
+        })
+        
         const newthread = await Thread.create({
             text,
             author,
-            community: null
+            community: communityIdObject
         })
-
+        if (communityIdObject){
+            await Community.findOneAndUpdate({id:communityId},{
+                $push:{threads:newthread._id}
+            })
+        }
         await User.findOneAndUpdate({ _id: author }, {
             $push: { threads: newthread._id }
         })
+        if(communityIdObject){
+            await Community.findByIdAndUpdate(communityIdObject,{
+                $push:{threads:newthread._id}
+            })
+        }
         revalidatePath(path)
     } catch (error) {
         throw new Error(`could not create thread due to ${error}`)
@@ -54,6 +67,7 @@ export async function fetchPosts(pagenumber = 1, pagesize = 10) {
                     }
                 }
             )
+            .populate({path:"community",model:Community})
 
         const totalpostcount = await Thread.countDocuments({ parentid: { $in: [null, undefined] } })
 
@@ -72,8 +86,8 @@ export async function fetchThreadById(id: string) {
         connecttoDb()
         const thread = await Thread.findById(id)
             .populate({ path: 'author', model: User, select: "_id id name image" })
-            .populate({ path: 'children', populate: [{ path: 'author', model: User, select: '_id id name parentId image' }, { path: 'children', model: Thread, populate: { path: 'author', model: User, select: "_id id name parentId image" } }] }).exec();
-
+            .populate({ path: 'children', populate: [{ path: 'author', model: User, select: '_id id name parentId image' }, { path: 'children', model: Thread, populate: { path: 'author', model: User, select: "_id id name parentId image" } }] })
+            .populate({path:"community",model:Community,select:"image name id _id"}).exec();
         return thread;
     }
     catch (error: any) {
@@ -121,5 +135,53 @@ export async function getParentThread(id:string){
         return parentThread
     } catch (error:any) {
         throw new Error(`could not get the parent thread ${error.message}`)
+    }
+}
+
+const findAllChildren=async(id:string):Promise<any[]>=>{
+const childThreads=await Thread.find({parentId:id}).populate("author community")
+const descendantsThreads=[]
+
+for(const child of childThreads){
+    const descendents=await findAllChildren(child._id)
+    descendantsThreads.push(child,...descendents)
+}
+
+return descendantsThreads;
+
+
+}
+
+export async function deleteThread(threadId:string,pathname:string){
+    try{
+        const mainThread=await Thread.findById(threadId).populate("author community")
+            console.log(mainThread)
+        //find the descendent threads (comments and their comments)
+            const descThreads=await findAllChildren(threadId)
+
+            const descids=[threadId,...descThreads.map((thread:any)=>thread._id)]
+        //find the userid and communityid of all the descendent threads
+            const userids=new Set([
+                ...descThreads.map((thread:any)=>thread.author?._id?.toString()),
+                mainThread.author?._id?.toString()
+            ].filter((id)=>id!==undefined))
+
+            const commIds=new Set([
+                
+                ...descThreads.map((thread:any)=>thread.community?._id?.toString()),
+                mainThread.community?._id?.toString()
+
+            ].filter((id)=>id!=undefined))
+        //update the user and communities by removing the respective descendent Thread
+        await Thread.deleteMany({_id:{$in:descids}})
+
+        await User.updateMany({_id:{$in:Array.from(userids)}},{$pull:{threads:{$in:descids}}})
+
+        await Community.updateMany({_id:{$in:Array.from(commIds)}},{$pull:{threads:{$in:{descids}}}})
+    
+    revalidatePath(pathname)
+    }
+    catch(error:any){
+        throw new Error(`could not delte the thread ${error.message}`)
     }
 }
