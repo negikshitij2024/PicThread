@@ -8,7 +8,7 @@ const page=async()=>{
 
     const userinfo=await fetchuser(user.id);
 
-    if(!userinfo.onboarded) redirect('/onboarding')
+    if(!userinfo || !userinfo.onboarded) redirect('/onboarding')
 
 return(
     <>

@@ -31,7 +31,6 @@ interface threadprops{
 
 const ThreadCard=async({author,currentUserid,comments,createdAt,parentid,community,id,content,isComment}:threadprops)=>{
     let parentThread=await getParentThread(parentid)
-    console.log(content)
     if(community){
         console.log(community)
     }
@@ -117,7 +116,7 @@ return(
         {parentid && 
                 <div className="absolute w-2/3   text-small-regular bottom-2 right-0">
                     <div className="flex flex-row gap-1">
-                        <p className="text-sky-700">replied to @{parentThread.author.name}-</p>
+                        <p className="text-sky-700">replied to {parentThread.author.id==author.id?("yourself"):(`@${parentThread.author.name}`)}-</p>
                         <Link href={`/thread/${parentThread.id}`}><p className="text-light-1 max-w-[100px] overflow-hidden truncate cursor-pointer hover:text-light-4">"{parentThread.text}"</p>
                         </Link>
                     </div>

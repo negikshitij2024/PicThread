@@ -119,9 +119,33 @@ export async function getActivity(userId:string){
             return acc.concat(userThread.children)
         },[])
 
+
         const activity=await Thread.find({id:{$in:childrenThreads},author:{$ne:userId}}).populate({path:"author",model:User,select:"_id name image"})
         return activity
     } catch (error:any) {
         throw new Error(`the activity of the user could not be fetched ${error.message}`)
+    }
+}
+
+export async function getReplies(userId:string){
+    try {
+        connecttoDb()
+
+        const userThreads=await Thread.find({author:userId})
+
+       
+        if(userThreads.length>0){
+        
+            const childrenIds=userThreads.reduce((acc,thread)=>{
+            return acc.concat(thread.children)},[])
+
+
+            const childThreads=await Thread.find({id:{$in:childrenIds},author:{$ne:userId}}).populate("author")
+                return childThreads      
+                }
+            return []
+          
+    } catch (error:any) {
+        throw new Error(`the replies could not be fetched ${error.message}`)
     }
 }

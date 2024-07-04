@@ -10,7 +10,6 @@ interface props{
 const DeleteThread = async({currentUserid,authorId,parentid,isComment,threadId}:props) => {
     const router=useRouter()
     const pathname=usePathname()
-
     if(currentUserid!==authorId || pathname==="/")return null
   return (
     <Image
@@ -21,7 +20,7 @@ const DeleteThread = async({currentUserid,authorId,parentid,isComment,threadId}:
         className="cursor-pointer object-contain"
         onClick={async()=>{
             await deleteThread(JSON.parse(threadId),pathname)
-
+           
             if(!isComment || !parentid){
                 router.push('/')
             }

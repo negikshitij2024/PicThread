@@ -88,6 +88,7 @@ export async function fetchThreadById(id: string) {
             .populate({ path: 'author', model: User, select: "_id id name image" })
             .populate({ path: 'children', populate: [{ path: 'author', model: User, select: '_id id name parentId image' }, { path: 'children', model: Thread, populate: { path: 'author', model: User, select: "_id id name parentId image" } }] })
             .populate({path:"community",model:Community,select:"image name id _id"}).exec();
+            console.log(thread)
         return thread;
     }
     catch (error: any) {
@@ -162,14 +163,14 @@ export async function deleteThread(threadId:string,pathname:string){
             const descids=[threadId,...descThreads.map((thread:any)=>thread._id)]
         //find the userid and communityid of all the descendent threads
             const userids=new Set([
-                ...descThreads.map((thread:any)=>thread.author?._id?.toString()),
-                mainThread.author?._id?.toString()
+                ...descThreads.map((thread:any)=>thread.author?._id),
+                mainThread.author?._id
             ].filter((id)=>id!==undefined))
 
             const commIds=new Set([
                 
-                ...descThreads.map((thread:any)=>thread.community?._id?.toString()),
-                mainThread.community?._id?.toString()
+                ...descThreads.map((thread:any)=>thread.community?._id),
+                mainThread.community?._id
 
             ].filter((id)=>id!=undefined))
         //update the user and communities by removing the respective descendent Thread
@@ -177,7 +178,7 @@ export async function deleteThread(threadId:string,pathname:string){
 
         await User.updateMany({_id:{$in:Array.from(userids)}},{$pull:{threads:{$in:descids}}})
 
-        await Community.updateMany({_id:{$in:Array.from(commIds)}},{$pull:{threads:{$in:{descids}}}})
+        await Community.updateMany({_id:{$in:Array.from(commIds)}},{$pull:{threads:{$in:descids}}})
     
     revalidatePath(pathname)
     }

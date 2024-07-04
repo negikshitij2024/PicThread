@@ -9,9 +9,9 @@ interface props{
 const ThreadsTab = async({currentUserId,accountId,accountType}:props) => {
 
     let result=await fetchUserPosts(accountId)
-    console.log(`these are ${result.name}'s Threads`)
-    console.log(result.threads)
-    if(!result) redirect('/')
+    // console.log(`these are ${result.name}'s Threads`)
+    // console.log(result.threads)
+    // if(!result) redirect('/')
   return (
     <section className="mt-9 flex flex-col gap-10">
         {result.threads.map((post:any)=>(

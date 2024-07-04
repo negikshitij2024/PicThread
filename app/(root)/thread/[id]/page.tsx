@@ -6,12 +6,15 @@ import { currentUser } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
 
 const Page=async({params}:{params:{id:string}})=>{
+    console.log(`this is the id :${params.id}`)
     const user=await currentUser()
     if(!user) return null
     const userinfo=await fetchuser(user?.id)
-
-    if(!userinfo || !userinfo.onboarding) redirect('/onboarding')
+    console.log(userinfo)
+     if(!userinfo || !userinfo.onboarded)
+        { redirect('/onboarding')}
         const post = await fetchThreadById(params.id)
+        console.log("fetchedddd")
     const isComment=(!post.parentId)?(false):(true)
     
     console.log(`is Comment ${isComment}`)
@@ -26,7 +29,7 @@ return(
 </div>
 
 <div className="mt-10">
-{post.children.map((child:any)=>(
+{post.children.length>0 && post.children.map((child:any)=>(
     <ThreadCard
     key={child._id} author={child.author} currentUserid={user?.id || ""} comments={child.children} parentid={child.parentId} content={child.text} community={child.community} createdAt={child.createdAt} id={child._id} isComment={child.parentId?(true):(false)}
     />
