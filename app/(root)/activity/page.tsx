@@ -14,7 +14,7 @@ const page =async() => {
   if(!userinfo || !userinfo.onboarded) redirect('/onboarding')
 
     const result=await getActivity(userinfo._id)
-    console.log(result[0].createdAt.getFullYear())
+    
     return (
       <>
         <h1 className="head-text">Activity</h1>

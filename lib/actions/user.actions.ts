@@ -119,10 +119,12 @@ export async function getActivity(userId:string){
             return acc.concat(userThread.children)
         },[])
 
-
+        if(childrenThreads.length>0){
         const activity=await Thread.find({id:{$in:childrenThreads},author:{$ne:userId}}).populate({path:"author",model:User,select:"_id name image"})
         
         return activity
+        }
+        return []
     } catch (error:any) {
         throw new Error(`the activity of the user could not be fetched ${error.message}`)
     }
