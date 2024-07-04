@@ -19,7 +19,7 @@ const ProfileHeader = ({accountId,authUserId,name,username,imgUrl,bio,type,}:pro
                 </div>
             </div>
             {accountId===authUserId && type !== "Community" &&(
-                <Link href='profile/edit'>
+                <Link href='/profile/edit'>
                     <div className="flex">
                         <Image src='/assets/edit.svg' alt='logout' width={16} height={16}/>
                         <p className='text-light-2 max-sm:hidden'>Edit</p>

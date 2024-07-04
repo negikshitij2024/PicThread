@@ -37,14 +37,16 @@ export function PostThread({userid}:{userid:string}) {
         },
     })
 
-    async function onSubmit(values: z.infer<typeof threadValidation>) {
-        await createThread({author:userid,text:values.thread,path:path,communityId:organization? organization.id : null})
-
+     function onSubmit(values: z.infer<typeof threadValidation>) {
+        createThread({author:userid,text:values.thread,path:path,communityId:organization? organization.id : null})
+        .then(()=>{
+            
         toast({
             description:"Thread Created"
         })
 
         router.push('/')
+        })
     }
 
     return (

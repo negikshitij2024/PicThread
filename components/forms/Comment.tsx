@@ -33,12 +33,12 @@ const Comment=({threadId,userImage,userId}:props)=>{
         },
       })
 
-     async function onSubmit(values: z.infer<typeof commentValidation>) {
-       await addCommentToThread(threadId,values.thread,userId,pathname)
-        toast({
+      function onSubmit(values: z.infer<typeof commentValidation>) {
+        addCommentToThread(threadId,values.thread,userId,pathname)
+        .then(()=>{toast({
             description:"Comment Added"
         })
-       form.reset()
+       form.reset()})
       }
 return(
     <Form {...form}>

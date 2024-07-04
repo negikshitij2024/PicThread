@@ -7,7 +7,7 @@ import React from 'react'
 interface props{
     currentUserid:string,authorId:string,parentid:string |null,isComment:boolean,threadId:string
 }
-const DeleteThread = async({currentUserid,authorId,parentid,isComment,threadId}:props) => {
+const DeleteThread = ({currentUserid,authorId,parentid,isComment,threadId}:props) => {
     const router=useRouter()
     const pathname=usePathname()
     if(currentUserid!==authorId || pathname==="/")return null
@@ -18,12 +18,12 @@ const DeleteThread = async({currentUserid,authorId,parentid,isComment,threadId}:
         width={18}
         height={18}
         className="cursor-pointer object-contain"
-        onClick={async()=>{
-            await deleteThread(JSON.parse(threadId),pathname)
-           
+        onClick={()=>{
+            deleteThread(JSON.parse(threadId),pathname)
+           .then(()=>{
             if(!isComment || !parentid){
                 router.push('/')
-            }
+            }})
         }}
 
         />

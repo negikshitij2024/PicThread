@@ -7,13 +7,16 @@ import { communityTabs } from "@/constants"
 import Image from "next/image"
 import ThreadsTab from "@/components/shared/ThreadsTab"
 import { fetchCommunityDetails } from "@/lib/actions/community.actions"
+import UserCard from "@/components/cards/UserCard"
+import Thread from "@/lib/models/thread.model"
 
 const Page = async ({ params }: { params: { id: string } }) => {
     const user = await currentUser()
     if (!user) return null
 
     const communityDetails=await fetchCommunityDetails(params.id)
-
+    const noofposts=await Thread.countDocuments({community:communityDetails._id,parent:{$in:[null,undefined]}})
+    console.log(communityDetails)
     return (
         <section>
             <ProfileHeader accountId={communityDetails.id} authUserId={user.id} name={communityDetails.name} username={communityDetails?.username} imgUrl={communityDetails?.image} bio={communityDetails.bio} type="Community" />
@@ -35,7 +38,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
 
                                 {tab.label == 'Threads' &&(
                                     <p className="ml-1 rounded-sm bg-light-4 px-2 py-1 !text-tiny-medium text-light-2">
-                                        {communityDetails?.threads?.length}
+                                        {noofposts}
                                     </p>
                                 )}
                             </TabsTrigger>
@@ -43,27 +46,25 @@ const Page = async ({ params }: { params: { id: string } }) => {
                         
                     </TabsList>
 
-                    {communityTabs.map((tab:any)=>(
+                    
                         <>
-                    <TabsContent key={`content-${tab.label}`} value="threads" className='w-full text-light-1'>
+                    <TabsContent  value="threads" className='w-full text-light-1'>
                        
                        
                        
                         <ThreadsTab currentUserId={user.id} accountId={communityDetails._id} accountType='Community'/>
                         
                     </TabsContent>
-                    <TabsContent key={`content-${tab.label}`} value="members" className='w-full text-light-1'>
+                    <TabsContent  value="members" className='w-full text-light-1'>
                        
-                       
-                       
-                        <ThreadsTab currentUserId={user.id} accountId={communityDetails._id} accountType='Community'/>
-                        
+                      {communityDetails.members.filter((member:any)=>member._id!==user.id).map((member:any)=>( 
+                       <div className="mt-3 bg-dark-2">
+                    <UserCard id={member.id} name={member.name} username={member.username} imgUrl={member.image} personType="User"/>
+                    </div>))}
                     </TabsContent>
 
                     </>
-                    ))
-                    
-                    }
+                   
                     </Tabs>
 
 

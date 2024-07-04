@@ -82,10 +82,12 @@ const AccountProfile = ({user,btnTitle}:props) => {
 
     if(hasimageChanged){
 
-      const imgRes=await startUpload(files)
-      if(imgRes && imgRes[0].url){
-        values.profile_photo=imgRes[0].url
-      }
+      startUpload(files).then((imgRes)=>{
+        if(imgRes && imgRes[0].url){
+          values.profile_photo=imgRes[0].url
+        }
+      })
+      
     }
 
 
