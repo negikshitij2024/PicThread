@@ -53,12 +53,12 @@ return(
                     <h4 className="cursor-pointer text-base-semibole text-light-3">{author.name}</h4>
                     </Link>
 
-                    <Link href={`/thread/${id}`}>
+                  
                     <h2 className=" mt-2 text-small-regular text-light-2">{content}</h2>
-                    </Link>
+                    
                     <div className="mt-5 flex flex-col gap-3">
                         <div className="flex gap-3.5">
-                            <Image src="/assets/heart-gray.svg" alt="like" width={24} height={24}></Image>
+                            <Link href={`/thread/${id}`}><Image src="/assets/reply.svg" alt="reply" width={24} height={24}></Image></Link>
                         </div>
                         {isComment && comments.length>0 &&(
                             <Link href={`/thread/${id}`}>
