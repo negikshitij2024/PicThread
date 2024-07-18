@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# PicThreads
 
-## Getting Started
+Visit site by clicking the link- https://pic-thread-psi.vercel.app/
 
-First, run the development server:
+![Screenshot 2024-07-18 160225](https://github.com/user-attachments/assets/06c55859-4c96-4333-a566-479bf8690210)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## App Description
+The PicThreads is a replica of Threads, the App by Meta.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Users can create Threads and can reply to the Threads of other people.
 
-## Learn More
+There can be multiple levels of comments.
 
-To learn more about Next.js, take a look at the following resources:
+User can create Community and invite other users to be a part of it.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Technology Used
 
-## Deploy on Vercel
+  The app is created using Next js which integrates both backend and the frontend in a way that there is no definite boundary between the two.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+ 
+    1. NextJs framework which holds the app together
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+    2. Typescript for writing the code
+
+    3. Clerk for authentication of users and using the organization feature.
+
+    4. Shadcn for Forms and UI components
+
+    5. Mongodb for Backend 
+
+
+## Features
+
+### Responsive design
+
+![Screenshot 2024-07-18 160632](https://github.com/user-attachments/assets/2fa8da0b-c2f1-4045-b296-ac003d63d37b)
+
+
+
+
+#### Profile Creation
+
+    User can create/edit their profile. He can set up his username,bio and profile picture
+![Screenshot 2024-07-18 160316](https://github.com/user-attachments/assets/19bd86d1-325c-42e5-b57c-3917d64e97d8)
+
+
+
+#### Home Page
+
+    The home page displays the different posts that are created by different users and organisations
+
+![Screenshot 2024-07-18 160225](https://github.com/user-attachments/assets/06c55859-4c96-4333-a566-479bf8690210)
+
+
+#### Profile Page
+
+    Profile page consists of the Threads created by the user.
+
+    And it also displays the replies that are done to his threads.
+
+    This Page is made using the Tabs component by shadcn
+
+![Screenshot 2024-07-18 160302](https://github.com/user-attachments/assets/19edde89-cfc1-431a-8899-7e4532ef2ea4)
+
+
+#### Community Page
+
+    This page features the users and the threads of the community.
+
+![Screenshot 2024-07-18 160244](https://github.com/user-attachments/assets/9d250e50-63e0-4d70-9c3b-b0978d17d621)
+
+
+
+
+## These are just some of the Features of PicThreads
+
+
+
